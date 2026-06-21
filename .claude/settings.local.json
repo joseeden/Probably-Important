@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"console.log\\(require\\('./node_modules/@prisma/client/package.json'\\).exports ? Object.keys\\(require\\('./node_modules/@prisma/client/package.json'\\).exports\\) : 'no exports'\\)\")",
+      "Bash(bunx prisma *)",
+      "Bash(node -e \"const p=require\\('./node_modules/prisma/package.json'\\); console.log\\(Object.keys\\(p.exports||{}\\).join\\(' '\\)\\)\")",
+      "Bash(bun add *)",
+      "Bash(bun run *)",
+      "Bash(bunx tsc *)",
+      "Skill(code-review)",
+      "Bash(echo \"EXIT: $?\")"
+    ]
+  },
+  "enabledPlugins": {
+    "context7@context7-marketplace": true
+  }
+}
