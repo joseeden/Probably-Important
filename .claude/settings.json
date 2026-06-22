@@ -21,7 +21,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR}\" && bun run format 2>/dev/null || true"
+            // "command": "cd \"${CLAUDE_PROJECT_DIR}\" && bun run format 2>/dev/null || true"
+            "command": "cd \"${CLAUDE_PROJECT_DIR}\" && /home/joseeden/.bun/bin/bun run format 2>/dev/null || true"
           }
         ]
       }
