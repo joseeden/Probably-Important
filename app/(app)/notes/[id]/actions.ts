@@ -44,6 +44,30 @@ export async function updateNote(
   redirect(`/notes/${id}`);
 }
 
+export async function toggleSharing(
+  id: string,
+): Promise<{ isPublic: boolean; shareToken: string | null }> {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect('/auth');
+
+  const note = await db.note.findUnique({ where: { id } });
+  if (!note || note.userId !== session.user.id) {
+    throw new Error('Note not found');
+  }
+
+  const nowPublic = !note.isPublic;
+  const updated = await db.note.update({
+    where: { id },
+    data: {
+      isPublic: nowPublic,
+      shareToken: nowPublic ? (note.shareToken ?? crypto.randomUUID()) : note.shareToken,
+    },
+    select: { isPublic: true, shareToken: true },
+  });
+
+  return updated;
+}
+
 export async function deleteNote(id: string): Promise<void> {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect('/auth');

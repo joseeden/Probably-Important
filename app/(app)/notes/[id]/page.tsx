@@ -4,6 +4,7 @@ import { headers } from 'next/headers';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
 import DeleteNoteButton from '@/components/DeleteNoteButton';
+import SharePanel from '@/components/SharePanel';
 
 export default async function NoteViewPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -33,6 +34,7 @@ export default async function NoteViewPage({ params }: { params: Promise<{ id: s
           Back
         </Link>
       </div>
+      <SharePanel noteId={id} initialIsPublic={note.isPublic} initialShareToken={note.shareToken} />
     </section>
   );
 }
