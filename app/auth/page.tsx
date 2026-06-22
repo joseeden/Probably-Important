@@ -33,7 +33,7 @@ export default function AuthPage() {
       return;
     }
 
-    router.push("/");
+    router.push("/dashboard");
     router.refresh();
   }
 

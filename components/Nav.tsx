@@ -16,16 +16,10 @@ export default function Nav() {
   return (
     <header className="border-b border-black/10 dark:border-white/10">
       <nav className="mx-auto flex w-full max-w-3xl items-center justify-between px-6 py-4">
-        <Link href="/" className="text-lg font-semibold tracking-tight">
+        <Link href="/dashboard" className="text-lg font-semibold tracking-tight">
           Probably Important
         </Link>
         <div className="flex items-center gap-4 text-sm">
-          <Link
-            href="/notes/new"
-            className="rounded-lg bg-foreground px-3 py-1.5 font-medium text-background transition-opacity hover:opacity-90"
-          >
-            New Note
-          </Link>
           <button
             type="button"
             onClick={handleSignOut}
