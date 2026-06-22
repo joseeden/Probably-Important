@@ -3,6 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import DeleteNoteButton from "@/components/DeleteNoteButton";
 
 export default async function NoteViewPage({
   params,
@@ -31,6 +32,7 @@ export default async function NoteViewPage({
         >
           Edit
         </Link>
+        <DeleteNoteButton id={id} />
         <Link href="/dashboard" className="font-medium text-zinc-500 underline underline-offset-4">
           Back
         </Link>
