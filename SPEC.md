@@ -9,11 +9,13 @@ A note-taking app where users write, organize, and optionally share richly forma
 **Probably Important** is a personal note-taking web application. Authenticated users can create, edit, delete, and search notes written in a rich text editor. Each note can optionally be shared publicly via a unique URL. The app is private by default: users only see their own notes unless they explicitly share one.
 
 **Goals**
+
 - Simple, fast note management with a clean rich text editing experience.
 - Secure, per-user data isolation.
 - Optional public sharing of individual notes.
 
 **Non-goals (out of scope)**
+
 - Collaboration / multi-user editing.
 - Folders, tags, or nested organization.
 - File/image attachments.
@@ -51,34 +53,41 @@ A note-taking app where users write, organize, and optionally share richly forma
 ## 4. User Flows
 
 **Sign up / Log in**
+
 1. Visitor lands on the app → redirected to login if unauthenticated.
 2. Visitor signs up or logs in via better-auth.
 3. On success → redirected to the notes dashboard.
 
 **Create a note**
+
 1. From the dashboard, user clicks "New Note".
 2. User enters a title and writes content in the TipTap editor.
 3. User saves → note persisted with timestamps → returns to dashboard (or note view).
 
 **Edit a note**
+
 1. User opens a note → clicks "Edit".
 2. User changes title/content → saves → `updatedAt` refreshed.
 
 **Delete a note**
+
 1. User opens a note (or list item menu) → clicks "Delete".
 2. User confirms → note removed → returns to dashboard.
 
 **Search**
+
 1. User types in the search box on the dashboard.
 2. List filters to notes whose title or content matches the query.
 
 **Share a note**
+
 1. User opens a note → toggles "Share publicly".
 2. App generates a unique share token and shows the public URL.
 3. User copies/sends the URL. Anyone visiting it sees a read-only rendered note.
 4. User toggles sharing off → public URL stops working.
 
 **Log out**
+
 1. User clicks "Log out" → session cleared → redirected to login.
 
 ---
@@ -88,6 +97,7 @@ A note-taking app where users write, organize, and optionally share richly forma
 Managed with Prisma on Neon PostgreSQL. Auth tables (User, Session, Account, Verification) are provided/managed by better-auth's Prisma schema; the app-owned model is `Note`.
 
 **User** (managed by better-auth)
+
 - `id` (string, PK)
 - `email` (string, unique)
 - `name` (string, optional)
@@ -98,6 +108,7 @@ Managed with Prisma on Neon PostgreSQL. Auth tables (User, Session, Account, Ver
 **Session / Account / Verification** — as defined by better-auth's Prisma adapter (sessions, OAuth/credential accounts, verification tokens).
 
 **Note** (app-owned)
+
 - `id` (string, PK, cuid)
 - `title` (string)
 - `content` (string — TipTap HTML or JSON)
@@ -108,6 +119,7 @@ Managed with Prisma on Neon PostgreSQL. Auth tables (User, Session, Account, Ver
 - `updatedAt` (timestamp, auto-updated)
 
 **Indexes**
+
 - `Note.userId` (list/search by owner)
 - `Note.shareToken` (unique, public lookup)
 - Search relies on `title`/`content` filtering (`contains`, case-insensitive). A Postgres full-text or trigram index may be added later if needed — kept simple for now.
@@ -130,17 +142,17 @@ Managed with Prisma on Neon PostgreSQL. Auth tables (User, Session, Account, Ver
 
 better-auth mounts its own handler at `/api/auth/[...all]`. App routes (Next.js Route Handlers) below are all JSON and require a valid session except where noted.
 
-| Method | Path | Description | Auth |
-|--------|------|-------------|------|
-| `ALL` | `/api/auth/[...all]` | better-auth handler (sign up, login, logout, session) | Public |
-| `GET` | `/api/notes` | List current user's notes; supports `?q=` search | Required |
-| `POST` | `/api/notes` | Create a note | Required |
-| `GET` | `/api/notes/:id` | Get a single owned note | Required (owner) |
-| `PUT` | `/api/notes/:id` | Update title/content of an owned note | Required (owner) |
-| `DELETE` | `/api/notes/:id` | Delete an owned note | Required (owner) |
-| `POST` | `/api/notes/:id/share` | Enable sharing → returns `shareToken`/URL | Required (owner) |
-| `DELETE` | `/api/notes/:id/share` | Disable sharing (revoke token) | Required (owner) |
-| `GET` | `/api/public/:shareToken` | Fetch a public shared note (read-only) | Public |
+| Method   | Path                      | Description                                           | Auth             |
+| -------- | ------------------------- | ----------------------------------------------------- | ---------------- |
+| `ALL`    | `/api/auth/[...all]`      | better-auth handler (sign up, login, logout, session) | Public           |
+| `GET`    | `/api/notes`              | List current user's notes; supports `?q=` search      | Required         |
+| `POST`   | `/api/notes`              | Create a note                                         | Required         |
+| `GET`    | `/api/notes/:id`          | Get a single owned note                               | Required (owner) |
+| `PUT`    | `/api/notes/:id`          | Update title/content of an owned note                 | Required (owner) |
+| `DELETE` | `/api/notes/:id`          | Delete an owned note                                  | Required (owner) |
+| `POST`   | `/api/notes/:id/share`    | Enable sharing → returns `shareToken`/URL             | Required (owner) |
+| `DELETE` | `/api/notes/:id/share`    | Disable sharing (revoke token)                        | Required (owner) |
+| `GET`    | `/api/public/:shareToken` | Fetch a public shared note (read-only)                | Public           |
 
 **Validation & errors**: All write endpoints validate body input and return appropriate status codes (`400` invalid, `401` unauthenticated, `403` not owner, `404` not found).
 
@@ -149,6 +161,7 @@ better-auth mounts its own handler at `/api/auth/[...all]`. App routes (Next.js 
 ## 8. Frontend Pages and Components
 
 **Pages (App Router)**
+
 - `/login` — Login / sign-up form.
 - `/` (dashboard) — Authenticated note list + search bar + "New Note" button.
 - `/notes/new` — Create note (editor).
@@ -157,6 +170,7 @@ better-auth mounts its own handler at `/api/auth/[...all]`. App routes (Next.js 
 - `/share/[shareToken]` — Public read-only view of a shared note (no auth).
 
 **Key components**
+
 - `AuthForm` — Login/sign-up form using better-auth client.
 - `NoteList` — Renders list of notes with title + timestamp.
 - `NoteListItem` — Single note row with quick actions.

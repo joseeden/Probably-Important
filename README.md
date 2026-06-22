@@ -1,5 +1,3 @@
-
-
 # Probably Important
 
 Probably Important is a note-taking app built with Next.js, TypeScript, Tailwind CSS, Bun, Prisma, Neon PostgreSQL, better-auth, and TipTap.
@@ -40,6 +38,6 @@ Notes:
 - This README documents the project brief and setup entry point.
 - Implementation work is intentionally not included here.
 
-## Full Documentation 
+## Full Documentation
 
 The full documentation for this project can be found here: [Probably Important](https://joseeden.github.io/joeden/docs/Software-Engineering/Web-Development/Projects/Probably-Important/)

@@ -1,13 +1,13 @@
-"use server";
+'use server';
 
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-import { z } from "zod";
-import { auth } from "@/lib/auth";
-import { db } from "@/lib/db";
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { z } from 'zod';
+import { auth } from '@/lib/auth';
+import { db } from '@/lib/db';
 
 const updateSchema = z.object({
-  title: z.string().min(1, "Title is required").max(255),
+  title: z.string().min(1, 'Title is required').max(255),
   content: z.string(),
 });
 
@@ -17,20 +17,20 @@ export async function updateNote(
   formData: FormData,
 ): Promise<{ error: string } | null> {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) redirect("/auth");
+  if (!session) redirect('/auth');
 
   const note = await db.note.findUnique({ where: { id } });
   if (!note || note.userId !== session.user.id) {
-    return { error: "Note not found" };
+    return { error: 'Note not found' };
   }
 
   const result = updateSchema.safeParse({
-    title: formData.get("title"),
-    content: formData.get("content") ?? "",
+    title: formData.get('title'),
+    content: formData.get('content') ?? '',
   });
 
   if (!result.success) {
-    return { error: result.error.issues[0]?.message ?? "Invalid input" };
+    return { error: result.error.issues[0]?.message ?? 'Invalid input' };
   }
 
   await db.note.update({
@@ -46,11 +46,11 @@ export async function updateNote(
 
 export async function deleteNote(id: string): Promise<void> {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) redirect("/auth");
+  if (!session) redirect('/auth');
 
   const note = await db.note.findUnique({ where: { id } });
-  if (!note || note.userId !== session.user.id) redirect("/dashboard");
+  if (!note || note.userId !== session.user.id) redirect('/dashboard');
 
   await db.note.delete({ where: { id } });
-  redirect("/dashboard");
+  redirect('/dashboard');
 }

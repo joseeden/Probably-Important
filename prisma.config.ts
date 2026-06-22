@@ -1,4 +1,4 @@
-import { defineConfig, env } from "prisma/config";
+import { defineConfig, env } from 'prisma/config';
 
 // Prisma 7 no longer auto-loads .env for the CLI; load it ourselves.
 process.loadEnvFile();
@@ -7,8 +7,8 @@ process.loadEnvFile();
 // used by CLI commands (migrate, studio); the runtime client uses the Neon
 // driver adapter in lib/db.ts.
 export default defineConfig({
-  schema: "prisma/schema.prisma",
+  schema: 'prisma/schema.prisma',
   datasource: {
-    url: env("DATABASE_URL"),
+    url: env('DATABASE_URL'),
   },
 });
