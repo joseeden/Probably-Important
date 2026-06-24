@@ -81,7 +81,10 @@ export default async function LandingPage() {
   if (isAuthenticated) redirect('/dashboard');
 
   return (
-    <main id='main-content' className='flex flex-1 flex-col items-center bg-zinc-50 dark:bg-black'>
+    <main
+      id='main-content'
+      className='flex flex-1 flex-col items-center bg-zinc-50 dark:bg-zinc-950'
+    >
       <section className='flex w-full max-w-4xl flex-1 flex-col items-center justify-center px-6 pb-16 pt-24 text-center'>
         <h1 className='text-4xl font-bold tracking-tight sm:text-5xl'>Probably Important</h1>
         <p className='mt-4 max-w-md text-lg text-zinc-500 dark:text-zinc-400'>

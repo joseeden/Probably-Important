@@ -1,8 +1,20 @@
 @import 'tailwindcss';
 
+/* ── Warm amber / golden pastel palette ────────────────────
+   Light: butter-cream page · deep amber-brown text
+          golden accents · peach card surfaces
+   Dark:  dark roasted brown · warm parchment text
+   ──────────────────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fdf6e8; /* warm butter-cream */
+  --foreground: #2c1600; /* deep amber-brown  */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1c0f03; /* dark roasted brown */
+    --foreground: #f7e7c6; /* warm parchment     */
+  }
 }
 
 @theme inline {
@@ -10,19 +22,34 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  /* Zinc → warm amber-tinted neutral scale
+     Blends butter → golden → amber → dark roast */
+  --color-zinc-50: #fdf6e8; /* butter-cream (matches bg)   */
+  --color-zinc-100: #faefd5; /* pale butter                 */
+  --color-zinc-200: #f5dfae; /* soft gold                   */
+  --color-zinc-300: #edc87a; /* warm amber                  */
+  --color-zinc-400: #d9a840; /* golden amber                */
+  --color-zinc-500: #a07228; /* rich amber (secondary text) */
+  --color-zinc-600: #7c5418; /* deep amber                  */
+  --color-zinc-700: #5a3a0d; /* warm brown                  */
+  --color-zinc-800: #3b2407; /* dark brown                  */
+  --color-zinc-900: #241503; /* very dark brown             */
+  --color-zinc-950: #1c1006; /* dark card surface           */
+
+  /* Card surface: soft peach-cream, distinct from page bg */
+  --color-white: #fffaf2;
+
+  /* Red stays red for destructive actions */
+  --color-red-500: #ef4444;
+  --color-red-400: #f87171;
+  --color-red-600: #dc2626;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans, Arial, Helvetica, sans-serif);
 }
 
 /* ── TipTap editor surface ─────────────────────────────── */
