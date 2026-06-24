@@ -11,9 +11,6 @@
       "Bash(echo \"EXIT: $?\")"
     ]
   },
-  "enabledPlugins": {
-    "context7@context7-marketplace": true
-  },
   "hooks": {
     "PostToolUse": [
       {
@@ -26,5 +23,10 @@
         ]
       }
     ]
+  },
+  "enabledPlugins": {
+    "context7@context7-marketplace": true,
+    "playwright@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
   }
 }
