@@ -1,0 +1,183 @@
+[
+  {
+    "category": "project-context",
+    "description": "Confirm the project instructions match the actual stack",
+    "steps": [
+      "Read SPEC.md, CLAUDE.md, AGENTS.md, package.json, prisma/schema.prisma, and lib/db.ts",
+      "Confirm the app uses Next.js 16, React 19, Bun as package manager, Prisma 7, Neon PostgreSQL, better-auth, TipTap, and Playwright",
+      "Confirm no task or implementation path assumes SQLite or Bun SQLite",
+      "Record any instruction drift in agent-progress.txt before changing code"
+    ],
+    "passes": true
+  },
+  {
+    "category": "database",
+    "description": "Verify Prisma and Neon PostgreSQL database setup",
+    "steps": [
+      "Use prisma/schema.prisma as the database source of truth",
+      "Verify datasource provider is postgresql",
+      "Verify Prisma client output is lib/generated/prisma",
+      "Verify lib/db.ts uses PrismaNeon with DATABASE_URL",
+      "Run bun run db:generate",
+      "Run bun run build or document any missing environment blocker"
+    ],
+    "passes": false
+  },
+  {
+    "category": "database",
+    "description": "Verify better-auth Prisma models and migration alignment",
+    "steps": [
+      "Confirm User, Session, Account, and Verification models match better-auth requirements for the installed version",
+      "Confirm the initial Prisma migration creates the same auth tables used by better-auth",
+      "Use the docs-researcher agent before changing better-auth or Prisma adapter configuration",
+      "Run bun run db:migrate only when DATABASE_URL points at the intended development Neon branch",
+      "Run bun run build after any schema or auth model change"
+    ],
+    "passes": false
+  },
+  {
+    "category": "database",
+    "description": "Verify Note model behavior for private notes and public sharing",
+    "steps": [
+      "Confirm Note has id, title, content, userId, isPublic, shareToken, createdAt, and updatedAt",
+      "Confirm Note.userId has an index for per-user dashboard queries",
+      "Confirm shareToken is unique and nullable",
+      "Confirm public lookups require both shareToken and isPublic=true",
+      "Add or update tests if a behavior is missing"
+    ],
+    "passes": false
+  },
+  {
+    "category": "auth",
+    "description": "Verify authentication flow and route protection",
+    "steps": [
+      "Confirm /auth supports sign up and sign in with email and password",
+      "Confirm /api/auth/[...all] exports the better-auth handler",
+      "Confirm protected app routes redirect unauthenticated users to /auth",
+      "Confirm sign out clears the session and redirects to /auth",
+      "Validate with Playwright or bunx playwright test"
+    ],
+    "passes": false
+  },
+  {
+    "category": "authorization",
+    "description": "Audit server-side ownership checks for note operations",
+    "steps": [
+      "Find every note read, create, update, delete, and share operation",
+      "Confirm private note operations use the authenticated session user id",
+      "Confirm users cannot read, edit, delete, or share notes they do not own",
+      "Confirm public shared note viewing is the only unauthenticated note path",
+      "Add regression coverage for any missing ownership check"
+    ],
+    "passes": false
+  },
+  {
+    "category": "notes",
+    "description": "Verify note creation, viewing, editing, and deletion",
+    "steps": [
+      "Confirm /notes/new creates a note for the authenticated user",
+      "Confirm /notes/[id] renders owned notes and rejects missing or unauthorized notes",
+      "Confirm /notes/[id]/edit saves validated title and content changes",
+      "Confirm delete requires confirmation and redirects to /dashboard",
+      "Validate with Playwright or bunx playwright test"
+    ],
+    "passes": false
+  },
+  {
+    "category": "editor",
+    "description": "Verify TipTap rich text support",
+    "steps": [
+      "Confirm the editor stores submitted content in the Note.content field",
+      "Confirm toolbar support for bold, italic, underline, headings, bullet list, numbered list, links, blockquote, and horizontal rule",
+      "Confirm saved rich text renders correctly in read-only note views",
+      "Add Playwright coverage for any missing formatting control",
+      "Run bun run lint and the relevant Playwright tests"
+    ],
+    "passes": false
+  },
+  {
+    "category": "sharing",
+    "description": "Verify public note sharing and revocation",
+    "steps": [
+      "Confirm sharing can be enabled from an owned note",
+      "Confirm public URLs use /share/[shareToken]",
+      "Confirm anonymous visitors can view public notes read-only",
+      "Confirm disabling sharing prevents anonymous access",
+      "Confirm the copy URL action gives user feedback",
+      "Validate with Playwright or bunx playwright test"
+    ],
+    "passes": false
+  },
+  {
+    "category": "search",
+    "description": "Implement dashboard search for the current user's notes",
+    "steps": [
+      "Add a search input to the dashboard or a focused dashboard client component",
+      "Search only the authenticated user's notes",
+      "Match the query against title and content using Prisma with PostgreSQL-compatible filtering",
+      "Keep the default dashboard ordered by updatedAt descending",
+      "Add Playwright coverage for matching and non-matching queries"
+    ],
+    "passes": false
+  },
+  {
+    "category": "validation",
+    "description": "Make validation commands match package.json and the project setup",
+    "steps": [
+      "Confirm package.json has scripts for dev, build, lint, db:generate, db:migrate, db:studio, and format",
+      "Add a test:e2e script for Playwright if useful",
+      "Do not add a test script unless unit tests are actually configured",
+      "Update project docs if command names change",
+      "Run bun run lint and bun run build after script changes"
+    ],
+    "passes": false
+  },
+  {
+    "category": "testing",
+    "description": "Stabilize Playwright end-to-end coverage",
+    "steps": [
+      "Confirm Playwright uses http://localhost:3030 consistently",
+      "Confirm global setup creates a unique test user and saved auth state",
+      "Ensure tests do not depend on hidden state from previous runs except the explicit /tmp state files",
+      "Cover auth, route protection, create, edit, delete, formatting, sharing, copying, and revocation",
+      "Run bunx playwright test or document any environment blocker"
+    ],
+    "passes": false
+  },
+  {
+    "category": "ui",
+    "description": "Polish responsive layout and accessible controls",
+    "steps": [
+      "Check dashboard, auth, note view, note edit, new note, and shared note pages at desktop and mobile widths",
+      "Ensure buttons and links have clear accessible names",
+      "Ensure form fields have labels or accessible names",
+      "Fix any text overflow, cramped spacing, or dark-mode contrast issues",
+      "Validate important UI changes with Playwright screenshots or browser checks"
+    ],
+    "passes": false
+  },
+  {
+    "category": "docs",
+    "description": "Document local environment and validation workflow",
+    "steps": [
+      "Confirm README or docs mention DATABASE_URL, BETTER_AUTH_SECRET, and BETTER_AUTH_URL",
+      "Confirm docs say BETTER_AUTH_URL must match http://localhost:3030 during local testing",
+      "Document the difference between Bun as package manager and Node runtime for Next.js",
+      "Document the validation ladder used by Ralph",
+      "Do not include real secrets in documentation"
+    ],
+    "passes": false
+  },
+  {
+    "category": "release-check",
+    "description": "Run the final project validation ladder",
+    "steps": [
+      "Run bun run lint",
+      "Run bun run build",
+      "Run bunx playwright test with the development server and Neon development database available",
+      "Review git diff for unrelated changes",
+      "Update agent-progress.txt with final validation results"
+    ],
+    "passes": false
+  }
+]
