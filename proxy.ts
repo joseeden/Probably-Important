@@ -7,9 +7,11 @@ import { getSessionCookie } from 'better-auth/cookies';
 // server-side in pages and route handlers.
 export function proxy(request: NextRequest) {
   const sessionCookie = getSessionCookie(request);
-  const isAuthPage = request.nextUrl.pathname === '/auth';
+  const { pathname } = request.nextUrl;
+  const isAuthPage = pathname === '/auth';
+  const isLandingPage = pathname === '/';
 
-  if (!sessionCookie && !isAuthPage) {
+  if (!sessionCookie && !isAuthPage && !isLandingPage) {
     return NextResponse.redirect(new URL('/auth', request.url));
   }
 
