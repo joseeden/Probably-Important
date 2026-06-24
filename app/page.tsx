@@ -70,8 +70,15 @@ const features = [
 ];
 
 export default async function LandingPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (session) redirect('/dashboard');
+  let isAuthenticated = false;
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    isAuthenticated = !!session;
+  } catch {
+    // If auth check fails, show landing page anyway
+  }
+
+  if (isAuthenticated) redirect('/dashboard');
 
   return (
     <main id='main-content' className='flex flex-1 flex-col items-center bg-zinc-50 dark:bg-black'>
