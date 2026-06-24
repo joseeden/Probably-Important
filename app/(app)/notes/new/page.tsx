@@ -19,18 +19,20 @@ function SubmitButton() {
 }
 
 export default function NewNotePage() {
-  const [state, action] = useActionState(createNote, null);
+  const [state, action, isPending] = useActionState(createNote, null);
 
   return (
-    <section>
+    <section id='main-content'>
       <h1 className='text-2xl font-semibold tracking-tight'>New note</h1>
       <form action={action} className='mt-6 flex flex-col gap-4'>
         {state?.error && <p className='text-sm text-red-500'>{state.error}</p>}
         <input
           name='title'
           required
+          disabled={isPending}
+          aria-label='Note title'
           placeholder='Title'
-          className='rounded-lg border border-black/10 px-4 py-2 text-base outline-none focus:ring-2 focus:ring-foreground/20 dark:border-white/10 dark:bg-transparent'
+          className='rounded-lg border border-black/10 px-4 py-2 text-base outline-none focus:ring-2 focus:ring-foreground/20 disabled:opacity-50 dark:border-white/10 dark:bg-transparent'
         />
         <RichTextEditor name='content' />
         <div>

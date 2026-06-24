@@ -32,9 +32,15 @@ function Toolbar({ editor }: { editor: Editor }) {
   }
 
   return (
-    <div className='flex flex-wrap items-center gap-0.5 border-b border-black/10 px-2 py-1.5 dark:border-white/10'>
+    <div
+      role='toolbar'
+      aria-label='Text formatting'
+      className='flex flex-wrap items-center gap-0.5 border-b border-black/10 px-2 py-1.5 dark:border-white/10'
+    >
       <button
         type='button'
+        aria-label='Bold'
+        aria-pressed={editor.isActive('bold')}
         onClick={() => editor.chain().focus().toggleBold().run()}
         className={btn(editor.isActive('bold'))}
       >
@@ -42,6 +48,8 @@ function Toolbar({ editor }: { editor: Editor }) {
       </button>
       <button
         type='button'
+        aria-label='Italic'
+        aria-pressed={editor.isActive('italic')}
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={btn(editor.isActive('italic'))}
       >
@@ -49,6 +57,8 @@ function Toolbar({ editor }: { editor: Editor }) {
       </button>
       <button
         type='button'
+        aria-label='Underline'
+        aria-pressed={editor.isActive('underline')}
         onClick={() => editor.chain().focus().toggleUnderline().run()}
         className={btn(editor.isActive('underline'))}
       >
@@ -57,6 +67,8 @@ function Toolbar({ editor }: { editor: Editor }) {
       <span className={sep} />
       <button
         type='button'
+        aria-label='Heading 1'
+        aria-pressed={editor.isActive('heading', { level: 1 })}
         onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
         className={btn(editor.isActive('heading', { level: 1 }))}
       >
@@ -64,6 +76,8 @@ function Toolbar({ editor }: { editor: Editor }) {
       </button>
       <button
         type='button'
+        aria-label='Heading 2'
+        aria-pressed={editor.isActive('heading', { level: 2 })}
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         className={btn(editor.isActive('heading', { level: 2 }))}
       >
@@ -72,6 +86,8 @@ function Toolbar({ editor }: { editor: Editor }) {
       <span className={sep} />
       <button
         type='button'
+        aria-label='Bullet list'
+        aria-pressed={editor.isActive('bulletList')}
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         className={btn(editor.isActive('bulletList'))}
       >
@@ -79,17 +95,27 @@ function Toolbar({ editor }: { editor: Editor }) {
       </button>
       <button
         type='button'
+        aria-label='Numbered list'
+        aria-pressed={editor.isActive('orderedList')}
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={btn(editor.isActive('orderedList'))}
       >
         1. List
       </button>
       <span className={sep} />
-      <button type='button' onClick={handleLink} className={btn(editor.isActive('link'))}>
+      <button
+        type='button'
+        aria-label={editor.isActive('link') ? 'Remove link' : 'Insert link'}
+        aria-pressed={editor.isActive('link')}
+        onClick={handleLink}
+        className={btn(editor.isActive('link'))}
+      >
         {editor.isActive('link') ? 'Unlink' : 'Link'}
       </button>
       <button
         type='button'
+        aria-label='Blockquote'
+        aria-pressed={editor.isActive('blockquote')}
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         className={btn(editor.isActive('blockquote'))}
       >
@@ -97,6 +123,7 @@ function Toolbar({ editor }: { editor: Editor }) {
       </button>
       <button
         type='button'
+        aria-label='Horizontal rule'
         onClick={() => editor.chain().focus().setHorizontalRule().run()}
         className={btn(false)}
       >

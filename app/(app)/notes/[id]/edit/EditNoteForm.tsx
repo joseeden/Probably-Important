@@ -27,7 +27,7 @@ interface Props {
 
 export default function EditNoteForm({ id, initialTitle, initialContent }: Props) {
   const boundAction = updateNote.bind(null, id);
-  const [state, action] = useActionState(boundAction, null);
+  const [state, action, isPending] = useActionState(boundAction, null);
 
   return (
     <form action={action} className='mt-6 flex flex-col gap-4'>
@@ -35,9 +35,11 @@ export default function EditNoteForm({ id, initialTitle, initialContent }: Props
       <input
         name='title'
         required
+        disabled={isPending}
         defaultValue={initialTitle}
+        aria-label='Note title'
         placeholder='Title'
-        className='rounded-lg border border-black/10 px-4 py-2 text-base outline-none focus:ring-2 focus:ring-foreground/20 dark:border-white/10 dark:bg-transparent'
+        className='rounded-lg border border-black/10 px-4 py-2 text-base outline-none focus:ring-2 focus:ring-foreground/20 disabled:opacity-50 dark:border-white/10 dark:bg-transparent'
       />
       <RichTextEditor name='content' defaultValue={initialContent} />
       <div className='flex items-center gap-4'>

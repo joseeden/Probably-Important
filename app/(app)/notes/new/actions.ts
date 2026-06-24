@@ -2,14 +2,9 @@
 
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { z } from 'zod';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
-
-const schema = z.object({
-  title: z.string().min(1, 'Title is required').max(255),
-  content: z.string(),
-});
+import { noteSchema } from '@/lib/validations';
 
 export async function createNote(
   _prevState: { error: string } | null,
@@ -18,7 +13,7 @@ export async function createNote(
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect('/auth');
 
-  const result = schema.safeParse({
+  const result = noteSchema.safeParse({
     title: formData.get('title'),
     content: formData.get('content') ?? '',
   });

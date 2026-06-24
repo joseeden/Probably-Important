@@ -38,7 +38,10 @@ export default function AuthPage() {
   }
 
   return (
-    <main className='flex flex-1 items-center justify-center bg-zinc-50 px-4 dark:bg-black'>
+    <main
+      id='main-content'
+      className='flex flex-1 items-center justify-center bg-zinc-50 px-4 dark:bg-black'
+    >
       <div className='w-full max-w-sm rounded-2xl border border-black/10 bg-white p-8 shadow-sm dark:border-white/10 dark:bg-zinc-950'>
         <h1 className='text-2xl font-semibold tracking-tight'>
           {isSignup ? 'Create your account' : 'Welcome back'}
@@ -83,11 +86,19 @@ export default function AuthPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete={isSignup ? 'new-password' : 'current-password'}
+              aria-describedby={isSignup ? 'password-hint' : undefined}
               className='rounded-lg border border-black/15 bg-transparent px-3 py-2 text-base font-normal outline-none focus:border-black/40 dark:border-white/20 dark:focus:border-white/50'
             />
+            {isSignup && (
+              <span id='password-hint' className='text-xs font-normal text-zinc-400'>
+                Minimum 8 characters
+              </span>
+            )}
           </label>
 
-          {error && <p className='text-sm text-red-600 dark:text-red-400'>{error}</p>}
+          <div aria-live='polite' aria-atomic='true'>
+            {error && <p className='text-sm text-red-600 dark:text-red-400'>{error}</p>}
+          </div>
 
           <button
             type='submit'

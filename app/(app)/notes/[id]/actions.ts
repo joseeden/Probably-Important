@@ -2,14 +2,10 @@
 
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { z } from 'zod';
 import { auth } from '@/lib/auth';
 import { db } from '@/lib/db';
-
-const updateSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(255),
-  content: z.string(),
-});
+import { noteSchema } from '@/lib/validations';
+import { ownsNote, computeShareToken } from '@/lib/note-utils';
 
 export async function updateNote(
   id: string,
@@ -20,11 +16,11 @@ export async function updateNote(
   if (!session) redirect('/auth');
 
   const note = await db.note.findUnique({ where: { id } });
-  if (!note || note.userId !== session.user.id) {
+  if (!note || !ownsNote(note, session.user.id)) {
     return { error: 'Note not found' };
   }
 
-  const result = updateSchema.safeParse({
+  const result = noteSchema.safeParse({
     title: formData.get('title'),
     content: formData.get('content') ?? '',
   });
@@ -51,7 +47,7 @@ export async function toggleSharing(
   if (!session) redirect('/auth');
 
   const note = await db.note.findUnique({ where: { id } });
-  if (!note || note.userId !== session.user.id) {
+  if (!note || !ownsNote(note, session.user.id)) {
     throw new Error('Note not found');
   }
 
@@ -60,7 +56,7 @@ export async function toggleSharing(
     where: { id },
     data: {
       isPublic: nowPublic,
-      shareToken: nowPublic ? (note.shareToken ?? crypto.randomUUID()) : note.shareToken,
+      shareToken: computeShareToken(note.shareToken, nowPublic),
     },
     select: { isPublic: true, shareToken: true },
   });
@@ -73,7 +69,7 @@ export async function deleteNote(id: string): Promise<void> {
   if (!session) redirect('/auth');
 
   const note = await db.note.findUnique({ where: { id } });
-  if (!note || note.userId !== session.user.id) redirect('/dashboard');
+  if (!note || !ownsNote(note, session.user.id)) redirect('/dashboard');
 
   await db.note.delete({ where: { id } });
   redirect('/dashboard');

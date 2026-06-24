@@ -16,13 +16,16 @@ export default async function NoteViewPage({ params }: { params: Promise<{ id: s
   if (!note || note.userId !== session.user.id) notFound();
 
   return (
-    <section>
+    <section id='main-content'>
       <h1 className='text-2xl font-semibold tracking-tight'>{note.title}</h1>
+      <p className='mt-1 text-sm text-zinc-500'>
+        Updated {new Date(note.updatedAt).toLocaleDateString()}
+      </p>
       <div
         className='mt-4 text-base leading-relaxed note-content'
         dangerouslySetInnerHTML={{ __html: note.content }}
       />
-      <div className='mt-6 flex gap-4 text-sm'>
+      <div role='group' aria-label='Note actions' className='mt-6 flex gap-4 text-sm'>
         <Link
           href={`/notes/${id}/edit`}
           className='font-medium text-foreground underline underline-offset-4'
