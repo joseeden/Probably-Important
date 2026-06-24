@@ -2,6 +2,13 @@
 
 Probably Important is a note-taking app built with Next.js, TypeScript, Tailwind CSS, Bun, Prisma, Neon PostgreSQL, better-auth, and TipTap.
 
+<div class='img-center'>
+
+![](/images/Screenshot2026-06-24131132.png)
+
+</div>
+
+
 ## Getting Started
 
 1. Install dependencies.
